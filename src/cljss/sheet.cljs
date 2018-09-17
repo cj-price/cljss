@@ -5,9 +5,14 @@
 
 (def ^:private limit 65534)
 
+(def injection-el (atom nil))
+
+(defn set-injection-el! [el]
+  (reset! injection-el el))
+
 (defn- make-style-tag []
   (let [tag (dom/createElement "style")
-        head (aget (dom/getElementsByTagNameAndClass "head") 0)]
+        head (or @injection-el (aget (dom/getElementsByTagNameAndClass "head") 0))]
     (gobj/set tag "type" "text/css")
     (dom/appendChild tag (dom/createTextNode ""))
     (dom/appendChild head tag)
